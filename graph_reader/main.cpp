@@ -7,9 +7,10 @@
 int BFS(graph<long, long, int, long, long, char> *g, int target)
 {
     std::queue<int> q;
-    q.push(0);
+    int start = g->beg_pos[0];
+    q.push(start);
     std::unordered_set<int> visited;
-    visited.insert(0);
+    visited.insert(start);
     int depth = 0;
     int nodes_in_level = 1;
     int nodes_in_next_level = 0;

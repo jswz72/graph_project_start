@@ -3,10 +3,8 @@
 #include <unordered_set>
 #include "graph.h"
 
-using std::endl;
-
 // Breadth first search for target in graph
-void BFS(graph<long, long, int, long, long, char> *g, int target)
+int BFS(graph<long, long, int, long, long, char> *g, int target)
 {
     std::queue<int> q;
     q.push(0);
@@ -20,24 +18,20 @@ void BFS(graph<long, long, int, long, long, char> *g, int target)
         int cur = q.front();
         q.pop();
         if (cur == target) 
-        {
-            std::cout << "Found " << target << " at level: " << depth << endl;
-            return;
-        }
+            return depth;
         int beg = g->beg_pos[cur];
         int end = g->beg_pos[cur+1];
-        int to_add = 0;
+        int initQLen = q.size();
         for(int i = beg; i < end; i++)
         {
             int next = g->csr[i];
             if (visited.find(next) == visited.end())
             {
-                to_add++;
                 q.push(next);
                 visited.insert(next);
             }
         }
-        nodes_in_next_level += to_add;
+        nodes_in_next_level += q.size() - initQLen;
         nodes_in_level--;
         if (nodes_in_level == 0) {
             depth++;
@@ -45,6 +39,7 @@ void BFS(graph<long, long, int, long, long, char> *g, int target)
             nodes_in_next_level = 0;
         }
     }
+    return -1;
 }
 
 int main(int args, char **argv)
@@ -64,7 +59,9 @@ int main(int args, char **argv)
 	<long, long, int, long, long, char>
 	(beg_file,csr_file,weight_file);
 
-    BFS(ginst, target);
+    int result = BFS(ginst, target);
+    if (result < 0) std::cout << target << " not found in graph" << std::endl;
+    else std::cout << target << " found at depth " << result << std::endl;
 	return 0;	
 }
 

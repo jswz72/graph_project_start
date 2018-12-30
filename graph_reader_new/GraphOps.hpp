@@ -2,5 +2,6 @@
 
 #ifndef GraphOps
 #define GraphOps
-int BFS(graph<long, long, long, long, long, long> *g, int target);
+long BFS(graph<long, long, long, long, long, long> *g, long target);
+long shortest_path_weights(graph<long, long, long, long, long, long> *g, long target);
 #endif

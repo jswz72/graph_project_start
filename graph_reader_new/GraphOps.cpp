@@ -1,8 +1,8 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <queue>
-#include "GraphOps.hpp"
 #include <limits.h>
+#include "GraphOps.hpp"
 
 using std::cout;
 using std::endl;
@@ -49,13 +49,13 @@ long BFS(long_graph *g, long target)
     return -1;
 }
 
-long min_dist(long distances[], unsigned int shortest_path[], long verticies)
+long min_dist(long distances[], unsigned int path[], long verticies)
 {
-    long min = INT_MAX;
+    long min = LONG_MAX;
     long min_idx;
     for (long i = 0; i < verticies; i++)
     {
-        if (!shortest_path[i] && distances[i] <= min)
+        if (!path[i] && distances[i] <= min)
         {
             min = distances[i];
             min_idx = i;
@@ -64,16 +64,17 @@ long min_dist(long distances[], unsigned int shortest_path[], long verticies)
     return min_idx;
 }
 
+// Use Dijsktra's algorithm to find the shortest path to the given target
 long shortest_path_weights(long_graph *g, long target)
 {
     long verticies = g->vert_count;
     // distance from start to vertix (index of arr)
     long distances[verticies];
-    // bitset true if included in path
+    // bitset: 1 if vertex included in path
     unsigned int path[verticies];
     for (long i = 0; i < verticies; i++)
     {
-        distances[i] = INT_MAX;
+        distances[i] = LONG_MAX;
         path[i] = 0;
     }
     distances[g->beg_pos[0]] = 0;
@@ -83,14 +84,13 @@ long shortest_path_weights(long_graph *g, long target)
         cout << " cur: " << cur << endl;
         path[cur] = true;
 
-        // Update distances
+        // Update distances of remaining verticies
         for (long i = g->beg_pos[cur]; i < g->beg_pos[cur+1]; i++)
         {
             long neighbor = g->csr[i];
             cout << "neighbor: " << neighbor << endl;
-            if (!path[neighbor] && 
-                    distances[cur] != INT_MAX &&
-                     distances[cur] + g->weight[i] < distances[neighbor])
+            if (!path[neighbor] && distances[cur] != LONG_MAX
+                    && distances[cur] + g->weight[i] < distances[neighbor])
             {
                 distances[neighbor] = distances[cur] + g->weight[i];
             }
